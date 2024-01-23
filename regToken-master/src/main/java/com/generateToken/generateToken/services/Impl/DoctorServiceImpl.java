@@ -47,6 +47,8 @@ public class DoctorServiceImpl implements DoctorService {
         Doctor doctor = new Doctor();
 
         doctor.setFirstName(signupRequest.getFirstName());
+        doctor.setLicenceNumber(signupRequest.getLicenceNumber());
+
         doctor.setLastName(signupRequest.getLastName());
         doctor.setSpecialization(signupRequest.getSpecialization());
         doctor.setDegree(signupRequest.getDegree());
@@ -62,6 +64,7 @@ public class DoctorServiceImpl implements DoctorService {
         Doctor createdDoctor = doctorRepository.save(doctor);
         DoctorDTO doctorDTO = new DoctorDTO();
         doctorDTO.setFirstName(createdDoctor.getFirstName());
+        doctorDTO.setLicenceNumber(createdDoctor.getLicenceNumber());
         doctorDTO.setLastName(createdDoctor.getLastName());
         doctorDTO.setSpecialization(createdDoctor.getSpecialization());
         doctorDTO.setDegree(createdDoctor.getDegree());
@@ -97,6 +100,7 @@ public class DoctorServiceImpl implements DoctorService {
 
            // doctorDTO.setName(createdDoctor.getName());
             doctorDTO.setFirstName(createdDoctor.getFirstName());
+            doctorDTO.setLicenceNumber(createdDoctor.getLicenceNumber());
             doctorDTO.setLastName(createdDoctor.getLastName());
             doctorDTO.setSpecialization(createdDoctor.getSpecialization());
             doctorDTO.setDegree(createdDoctor.getDegree());
@@ -109,7 +113,7 @@ public class DoctorServiceImpl implements DoctorService {
            // doctorDTO.setPassword(createdDoctor.getPassword());
             doctorDTO.setClinics(createdDoctor.getClinics());
             List<DoctorInterface> di = doctorInterfaceRepository.findByDoctorId(createdDoctor.getId());
-            
+
             LocalDate today = LocalDate.now();
             List<DoctorInterface> newdi = new ArrayList<>();
 
@@ -146,6 +150,7 @@ public class DoctorServiceImpl implements DoctorService {
         Doctor existingDoctor = doctorRepository.findFirstByEmail(email);
        // existingDoctor.setName(updatedDoctor.getName());
         existingDoctor.setFirstName(updatedDoctor.getFirstName());
+        existingDoctor.setLicenceNumber(updatedDoctor.getLicenceNumber());
         existingDoctor.setLastName(updatedDoctor.getLastName());
         existingDoctor.setSpecialization(updatedDoctor.getSpecialization());
         existingDoctor.setDegree(updatedDoctor.getDegree());
@@ -225,7 +230,9 @@ public class DoctorServiceImpl implements DoctorService {
               .orElseThrow(() -> new NotFoundException("Doctor not found"));
            // existingDoctor.setName(doctor.getName());
             existingDoctor.setFirstName(doctor.getFirstName());
+            existingDoctor.setLicenceNumber(doctor.getLicenceNumber());
             existingDoctor.setLastName(doctor.getLastName());
+            existingDoctor.setAchievements(doctor.getAchievements());
             existingDoctor.setSpecialization(doctor.getSpecialization());
             existingDoctor.setDegree(doctor.getDegree());
             existingDoctor.setCitations(doctor.getCitations());

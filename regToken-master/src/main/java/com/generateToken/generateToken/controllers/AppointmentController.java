@@ -20,8 +20,6 @@ import com.generateToken.generateToken.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
-//public class AppointmentController {
-//}
 @RestController
 @RequestMapping("/appointment")
 @CrossOrigin("http://localhost:3000")

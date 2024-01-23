@@ -33,6 +33,7 @@ public class DoctorDTO {
     private int experience;
     private List<String> research_journal;
     private List<String> citations;
+
     private List<String> achievements;
     private String licenceNumber;
     @Column(unique = true, length = 10)
