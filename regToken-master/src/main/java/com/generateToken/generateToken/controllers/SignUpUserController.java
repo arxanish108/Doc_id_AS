@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -30,53 +31,53 @@ import com.generateToken.generateToken.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
-
 @RestController
 @RequestMapping("/home")
-//@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+@CrossOrigin("http://localhost:3000")
+// @RequestMapping(method = RequestMethod.POST, consumes =
+// MediaType.APPLICATION_JSON_VALUE)
 public class SignUpUserController {
 
-    @Autowired
-    private DoctorService doctorService;
+  @Autowired
+  private DoctorService doctorService;
 
-    @Autowired
-    private DoctorRepository doctorRepository;
+  @Autowired
+  private DoctorRepository doctorRepository;
 
-    public  static String uploadDir =
-      System.getProperty("user.dir") + "src/main/webapp/images";
+  public static String uploadDir = System.getProperty("user.dir") + "src/main/webapp/images";
 
-    @PostMapping("/register")
-    public ResponseEntity<?> signupUser(@RequestBody SignupRequest signupRequest){
-        System.out.println("hero");
+  @PostMapping("/register")
+  public ResponseEntity<?> signupUser(@RequestBody SignupRequest signupRequest) {
+    System.out.println("hero");
 
-        DoctorDTO createdUser = doctorService.createUser(signupRequest);
-        if (createdUser == null){
-            return new ResponseEntity<>("User not created, come again later!", HttpStatus.BAD_REQUEST);
-        }
-        System.out.println(HttpStatus.OK);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    DoctorDTO createdUser = doctorService.createUser(signupRequest);
+    if (createdUser == null) {
+      return new ResponseEntity<>("User not created, come again later!", HttpStatus.BAD_REQUEST);
     }
+    System.out.println(HttpStatus.OK);
+    return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+  }
 
-//  public byte[] getDoctorImage(Long doctorId) {
-//    Optional<Doctor> optionalDoctor = doctorRepository.findById(doctorId);
-//    if (optionalDoctor.isPresent()) {
-//      Doctor doctor = optionalDoctor.get();
-//      return doctor.getProfileImage();
-//    }
-//    return null; // Or handle the case when the doctor or image is not found
-//  }
+  // public byte[] getDoctorImage(Long doctorId) {
+  // Optional<Doctor> optionalDoctor = doctorRepository.findById(doctorId);
+  // if (optionalDoctor.isPresent()) {
+  // Doctor doctor = optionalDoctor.get();
+  // return doctor.getProfileImage();
+  // }
+  // return null; // Or handle the case when the doctor or image is not found
+  // }
 
-//    @GetMapping("/get")
-//    public ResponseEntity<DoctorDTO> getUser(@RequestParam Long docId){
-//        //String token = extractTokenFromRequest(request);
-//        DoctorDTO doctor =  doctorService.getDoctor(docId);
-//
-//        if (doctor != null) {
-//            return ResponseEntity.ok(doctor);
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
+  // @GetMapping("/get")
+  // public ResponseEntity<DoctorDTO> getUser(@RequestParam Long docId){
+  // //String token = extractTokenFromRequest(request);
+  // DoctorDTO doctor = doctorService.getDoctor(docId);
+  //
+  // if (doctor != null) {
+  // return ResponseEntity.ok(doctor);
+  // } else {
+  // return ResponseEntity.notFound().build();
+  // }
+  // }
 
   private String extractTokenFromRequest(HttpServletRequest request) {
     // Try to extract token from Authorization header
@@ -101,7 +102,8 @@ public class SignUpUserController {
       }
     }
 
-    // If not found in cookies, try to extract from request body (assuming it's a POST request)
+    // If not found in cookies, try to extract from request body (assuming it's a
+    // POST request)
     // This part depends on your application's specific request structure
     // For simplicity, we'll assume a form parameter named "token"
     String tokenFromBody = request.getParameter("token");
@@ -113,71 +115,69 @@ public class SignUpUserController {
     return null;
   }
 
-
   @GetMapping("/get")
-  public ResponseEntity<DoctorDTO> getUser(HttpServletRequest request){
+  public ResponseEntity<DoctorDTO> getUser(HttpServletRequest request) {
     String token = extractTokenFromRequest(request);
     System.out.println(token);
     if (token != null) {
       String email = JwtUtil.getEmailFromToken(token);
-      System.out.println("id is"+" "+email);
+      System.out.println("id is" + " " + email);
       if (email != null) {
         DoctorDTO doctor = doctorService.getDoctor(email);
-        return new ResponseEntity<>(doctor,HttpStatus.OK);
+        return new ResponseEntity<>(doctor, HttpStatus.OK);
       }
     }
-   return null;
+    return null;
   }
 
+  @GetMapping("/getAllDoctors")
+  public List<Doctor> getAllDoctors() {
+    return doctorService.getAllDoctors();
+  }
 
-    @GetMapping("/getAllDoctors")
-    public List<Doctor> getAllDoctors() {
-        return doctorService.getAllDoctors();
-    }
+  @GetMapping("/amount")
+  public ResponseEntity<?> getAmount(HttpServletRequest httpServletRequest,
+      @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
+      @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
+    String token = extractTokenFromRequest(httpServletRequest);
+    String email = JwtUtil.getEmailFromToken(token);
 
+    Double amt = doctorService.findAmt(email, startDate, endDate);
+    return ResponseEntity.ok(amt);
+  }
 
-    @GetMapping("/amount")
-    public ResponseEntity<?> getAmount(HttpServletRequest httpServletRequest,
-    @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate){
-        String token = extractTokenFromRequest(httpServletRequest);
-        String email = JwtUtil.getEmailFromToken(token);
+  @PutMapping("/updateDoctor")
+  public Doctor updateDoctor(HttpServletRequest httpServletRequest, @RequestBody Doctor Doctor) {
+    String token = extractTokenFromRequest(httpServletRequest);
+    String email = JwtUtil.getEmailFromToken(token);
+    return doctorService.updateDoctor(email, Doctor);
+  }
 
-        Double amt = doctorService.findAmt(email,startDate,endDate);
-        return ResponseEntity.ok(amt);
-    }
+  @PatchMapping("/up")
+  public Doctor updateByField(HttpServletRequest httpServletRequest, @RequestBody Map<String, Object> fields) {
+    String token = extractTokenFromRequest(httpServletRequest);
+    String email = JwtUtil.getEmailFromToken(token);
+    return doctorService.updateByFields(email, fields);
+  }
 
-    @PutMapping("/updateDoctor")
-    public Doctor updateDoctor(HttpServletRequest httpServletRequest, @RequestBody Doctor Doctor) {
-      String token = extractTokenFromRequest(httpServletRequest);
-      String email = JwtUtil.getEmailFromToken(token);
-        return doctorService.updateDoctor(email, Doctor);
-    }
+  @DeleteMapping("/deleteDoctor")
+  public String deleteDoctor(HttpServletRequest httpServletRequest) {
+    String token = extractTokenFromRequest(httpServletRequest);
+    String email = JwtUtil.getEmailFromToken(token);
+    return doctorService.deleteDoctor(email);
+  }
 
-    @PatchMapping("/up")
-    public Doctor updateByField(HttpServletRequest httpServletRequest, @RequestBody Map<String,Object> fields){
-      String token = extractTokenFromRequest(httpServletRequest);
-      String email = JwtUtil.getEmailFromToken(token);
-      return doctorService.updateByFields(email,fields);
-    }
+  @GetMapping("/payment")
+  public RedirectView payment() {
+    String paymentUrl = "http://localhost:9090/";
+    return new RedirectView(paymentUrl);
+  }
 
-    @DeleteMapping("/deleteDoctor")
-    public String deleteDoctor(HttpServletRequest httpServletRequest) {
-      String token = extractTokenFromRequest(httpServletRequest);
-      String email = JwtUtil.getEmailFromToken(token);
-      return doctorService.deleteDoctor(email);
-    }
-
-
-    @GetMapping("/payment")
-    public RedirectView payment() {
-        String paymentUrl = "http://localhost:9090/";
-        return new RedirectView(paymentUrl);
-    }
-
-    @PutMapping("/forgotPassword")
-    public ResponseEntity<ApiResponse> forgotPassword(@RequestParam String email,@RequestParam String newPassword,@RequestParam String confirmPassword) {
-      ApiResponse apiResponse = doctorService.forgotPassword(email, newPassword, confirmPassword);
-        return new ResponseEntity<>(apiResponse,HttpStatus.OK);
-    }
+  @PutMapping("/forgotPassword")
+  public ResponseEntity<ApiResponse> forgotPassword(@RequestParam String email, @RequestParam String newPassword,
+      @RequestParam String confirmPassword) {
+    ApiResponse apiResponse = doctorService.forgotPassword(email, newPassword, confirmPassword);
+    return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+  }
 
 }

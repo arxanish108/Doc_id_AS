@@ -24,6 +24,7 @@ public class SignupRequest {
     private List<String> research_journal;
     private List<String> citations;
     private String contact;
+    private String licenceNumber;
     @Column(unique = true)
     private String email;
     private String password;
@@ -33,12 +34,12 @@ public class SignupRequest {
     @Transient
     private List<DoctorInterface> docIntr;
 
-//  public byte[] getProfileImage() {
-//    return profileImage;
-//  }
-//
-//  public void setProfileImage(byte[] profileImage) {
-//    this.profileImage = profileImage;
-//  }
+    // public byte[] getProfileImage() {
+    // return profileImage;
+    // }
+    //
+    // public void setProfileImage(byte[] profileImage) {
+    // this.profileImage = profileImage;
+    // }
 
 }

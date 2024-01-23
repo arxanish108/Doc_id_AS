@@ -37,6 +37,7 @@ public class Doctor {
     private List<String> research_journal;
     private List<String> citations;
     private List<String> achievements;
+    private String licenceNumber;
 
     @Column(unique = true, length = 10)
     @Size(min = 10, max = 10, message = "Contact length must be exactly 10 characters")
@@ -45,7 +46,7 @@ public class Doctor {
     private String email;
     private String password;
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Clinic> clinics = new ArrayList<>();
 
@@ -58,20 +59,19 @@ public class Doctor {
         clinic.setDoctor(null);
     }
 
-    @OneToMany(mappedBy = "doctor",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Appointment> appointmentPatientList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "doctor",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Prescription> prescriptionList = new ArrayList<>();
 
-    public void addAppointmentPatient1(Appointment appointment){
+    public void addAppointmentPatient1(Appointment appointment) {
         this.appointmentPatientList.add(appointment);
     }
 
     @Transient
     public List<DoctorInterface> docIntr;
-
 
 }

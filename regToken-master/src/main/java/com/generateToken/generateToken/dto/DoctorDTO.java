@@ -29,12 +29,13 @@ public class DoctorDTO {
     private List<String> degree;
 
     private List<String> specialization;
-   // private String degree;
+    // private String degree;
     private int experience;
     private List<String> research_journal;
     private List<String> citations;
     private List<String> achievements;
-    @Column(unique = true,length=10)
+    private String licenceNumber;
+    @Column(unique = true, length = 10)
     private String contact;
     @Column(unique = true)
     private String email;
@@ -44,7 +45,8 @@ public class DoctorDTO {
     private List<DoctorInterface> docIntr;
 
     private List<Clinic> clinics = new ArrayList<>();
-    public void addClinic(Clinic clinic){
+
+    public void addClinic(Clinic clinic) {
         this.clinics.add(clinic);
     }
 }

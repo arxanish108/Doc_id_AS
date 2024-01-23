@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,9 +25,9 @@ import com.generateToken.generateToken.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
-
 @RestController
 @RequestMapping("/inter")
+@CrossOrigin("http://localhost:3000")
 public class DoctorInterfaceController {
 
   @Autowired
@@ -101,7 +102,7 @@ public class DoctorInterfaceController {
   }
 
   @GetMapping("/get")
-  public ResponseEntity<?> getInterface(HttpServletRequest request,@RequestParam LocalDate currentDate) {
+  public ResponseEntity<?> getInterface(HttpServletRequest request, @RequestParam LocalDate currentDate) {
     String token = extractTokenFromRequest(request);
 
     if (token == null) {
@@ -130,8 +131,9 @@ public class DoctorInterfaceController {
   }
 
   @PutMapping("/update")
-  public ResponseEntity<?> updateInterface(HttpServletRequest request,@RequestBody DoctorInterface doctorInterfaceDto,@RequestParam LocalDate currentDate) {
-      String token = extractTokenFromRequest(request);
+  public ResponseEntity<?> updateInterface(HttpServletRequest request, @RequestBody DoctorInterface doctorInterfaceDto,
+      @RequestParam LocalDate currentDate) {
+    String token = extractTokenFromRequest(request);
 
     if (token == null) {
       return new ResponseEntity<>("Token not provided", HttpStatus.UNAUTHORIZED);
@@ -148,7 +150,7 @@ public class DoctorInterfaceController {
     if (doctor == null) {
       return new ResponseEntity<>("Doctor not found", HttpStatus.NOT_FOUND);
     }
-    DoctorInterface createdDoctorInterface = doctorInterfaceService.updateInt(doctorInterfaceDto,currentDate, doctor);
+    DoctorInterface createdDoctorInterface = doctorInterfaceService.updateInt(doctorInterfaceDto, currentDate, doctor);
 
     if (createdDoctorInterface != null) {
       return new ResponseEntity<>(createdDoctorInterface, HttpStatus.OK);
@@ -158,8 +160,9 @@ public class DoctorInterfaceController {
   }
 
   @DeleteMapping("/delete")
-  public ResponseEntity<?> deleteInterface(HttpServletRequest request,@RequestParam LocalDate currentDate,@RequestParam String clinicName) {
-  String token = extractTokenFromRequest(request);
+  public ResponseEntity<?> deleteInterface(HttpServletRequest request, @RequestParam LocalDate currentDate,
+      @RequestParam String clinicName) {
+    String token = extractTokenFromRequest(request);
 
     if (token == null) {
       return new ResponseEntity<>("Token not provided", HttpStatus.UNAUTHORIZED);
@@ -177,7 +180,7 @@ public class DoctorInterfaceController {
       return new ResponseEntity<>("Doctor not found", HttpStatus.NOT_FOUND);
     }
 
-    String createdDoctorInterface = doctorInterfaceService.deleteInt(currentDate,clinicName, doctor);
+    String createdDoctorInterface = doctorInterfaceService.deleteInt(currentDate, clinicName, doctor);
 
     if (createdDoctorInterface != null) {
       return new ResponseEntity<>(createdDoctorInterface, HttpStatus.OK);

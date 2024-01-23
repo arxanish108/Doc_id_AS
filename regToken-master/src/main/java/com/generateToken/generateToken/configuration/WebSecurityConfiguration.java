@@ -16,13 +16,20 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfiguration {
-   // ,"/clinic/amount"
+    // ,"/clinic/amount"
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-      return  http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(authorizeHttpRequests -> {authorizeHttpRequests
-                           .requestMatchers("/authenticate/**", "/sign-up","/register","/clinic/betweenDate","/appointment/book1","/clinic/getApt","/image/**","/clinic/add","/clinic/amount","/medicine-prescriptions/**","/prescriptions/**","/home/amount","/home/**","/http://localhost:9090/**","/payment/**","/clinic/**","/inter/add").permitAll()
-                           .requestMatchers("/api/**").authenticated();
-               } ).sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
+        return http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(authorizeHttpRequests -> {
+            authorizeHttpRequests
+                    .requestMatchers("/authenticate/**", "/sign-up", "/register", "/clinic/betweenDate",
+                            "/appointment/book1", "/clinic/getApt", "/image/**", "/clinic/add", "/clinic/amount",
+                            "/medicine-prescriptions/**", "/prescriptions/**", "/home/amount", "/home/**",
+                            "/http://localhost:9090/**", "/http://localhost:3000/**", "/payment/**", "/clinic/**",
+                            "/inter/add")
+                    .permitAll()
+                    .requestMatchers("/api/**").authenticated();
+        }).sessionManagement(
+                sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
     }
 
     @Bean
@@ -34,6 +41,5 @@ public class WebSecurityConfiguration {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-
 
 }
